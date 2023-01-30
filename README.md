@@ -1,10 +1,6 @@
----
-
-****\***** Poly Physical Phone Dialer ****\*****
-****\***** Written: Keith D'Atrio ****\*****
-****\***** and Joe Smith ****\*****
-
----
+**\*** Poly Physical Phone Dialer \***\*
+\*\*\*** Written: Keith D'Atrio \***\*
+\*\*\*** and Joe Smith \*\*\*\*
 
 Requirements (tested versions):
 
