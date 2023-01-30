@@ -1,0 +1,10 @@
+# .Gitignore patterns
+.env
+poetry.toml
+.DS_Store
+pyproject.toml
+.vscode
+.python-version
+Pipfile.lock
+poetry.lock
+tests/
