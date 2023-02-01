@@ -31,6 +31,9 @@ def GetPhoneConfig(PhoneIPs):
 PhoneList = pd.read_csv('data/PhoneList.csv')
 print(PhoneList)
 for index, rows in PhoneList.iterrows():
-    print('IP Address is ' + rows['phoneIP'] + ' the type of phone is ' + rows['phoneType'])
-# APIResponse = GetPhoneConfig(PhoneIP)
-# print(response.text)
+    # print('IP Address is ' + rows['phoneIP'] + ' the type of phone is ' + rows['phoneType'])
+    if rows['phoneType'] == 'Poly':
+        APIResponse = GetPhoneConfig(rows['phoneIP'])
+        print(APIResponse)
+    else:
+        print('Not a Poly phone')
