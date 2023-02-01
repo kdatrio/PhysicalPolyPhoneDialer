@@ -9,7 +9,7 @@ import requests, time
 # ********* Function Declarations **********
 
 
-def PlaceCall(CalledNumber):  # function to place Call with phone number given
+def polyPlaceCall(CalledNumber):  # function to place Call with phone number given
     headers = {
         "Content-Type": "application/json",
     }
@@ -23,7 +23,7 @@ def PlaceCall(CalledNumber):  # function to place Call with phone number given
     )
 
 
-def CheckCallStatus():  # function to check status of the call and get the responsse into JSON format
+def polyCheckCallStatus():  # function to check status of the call and get the responsse into JSON format
     headers = {
         "Content-Type": "application/json",
     }
@@ -36,7 +36,7 @@ def CheckCallStatus():  # function to check status of the call and get the respo
     return response.json()
 
 
-def EndCall(
+def polyEndCall(
     Handle,
 ):  # function to end call using Call Handle returned from CheckCallStatus() function
     headers = {
@@ -65,12 +65,12 @@ Phone = os.getenv("PHONE")
 
 PhoneNumber = input("What phone number would you like to call? ")
 
-PlaceCall(PhoneNumber)  # Send phone number to call
+polyPlaceCall(PhoneNumber)  # Send phone number to call
 
 time.sleep(10)
 
 # Get JSON response and place in CallStatus variable
-CallStatus = CheckCallStatus()
+CallStatus = polyCheckCallStatus()
 
 # Get Call Handle from JSON response to Call Status
 CallHandle = CallStatus["data"]["CallHandle"]
@@ -78,4 +78,4 @@ print(CallHandle)  # Just to display something to screen to troubleshoot when br
 
 time.sleep(3)
 
-EndCall(CallHandle)  # End call using Call Handle returned above
+polyEndCall(CallHandle)  # End call using Call Handle returned above
