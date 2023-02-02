@@ -1,15 +1,15 @@
 # Poly Physical Phone Dialer for Sandbox environments
 # Created by: Keith D'Atrio and Joe Smith
-# January 2023
+# January 2023 - Updated Feb 2023
 
 import os
 from dotenv import load_dotenv
-import requests, time
+import requests, time, random
+import pandas as pd
 
 # ********* Function Declarations **********
 
-
-def PlaceCall(CalledNumber):  # function to place Call with phone number given
+def polyPlaceCall(CalledNumber):  # function to place Call with phone number given
     headers = {
         "Content-Type": "application/json",
     }
@@ -22,8 +22,7 @@ def PlaceCall(CalledNumber):  # function to place Call with phone number given
         auth=(PhoneUser, Password),
     )
 
-
-def CheckCallStatus():  # function to check status of the call and get the responsse into JSON format
+def polyCheckCallStatus():  # function to check status of the call and get the responsse into JSON format
     headers = {
         "Content-Type": "application/json",
     }
@@ -35,8 +34,7 @@ def CheckCallStatus():  # function to check status of the call and get the respo
     )
     return response.json()
 
-
-def EndCall(
+def polyEndCall(
     Handle,
 ):  # function to end call using Call Handle returned from CheckCallStatus() function
     headers = {
@@ -52,30 +50,35 @@ def EndCall(
     )
     print(response)
 
-
 # ********** Main Code ***********
-
 # Load Environmental Settings from .env file
 load_dotenv()
-
 # Create and load variables from Environment settings
 PhoneUser = os.getenv("PHONEUSER")
 Password = os.getenv("PASSWORD")
-Phone = os.getenv("PHONE")
+PhoneNumberList = pd.read_csv('data/PhoneNumberList.csv', dtype= str)
+PhoneList = pd.read_csv('data/PhoneList.csv')
 
-PhoneNumber = input("What phone number would you like to call? ")
 
-PlaceCall(PhoneNumber)  # Send phone number to call
 
-time.sleep(10)
+for DIDIndex, DIDrows in PhoneNumberList.iterrows():
+    PhoneNumber = DIDrows['phoneNumber']
+    print('Calling: ' + PhoneNumber)
+    for index, rows in PhoneList.iterrows():
+        # print('IP Address is ' + rows['phoneIP'] + ' the type of phone is ' + rows['phoneType'])
+        if rows['phoneType'] == 'Poly':
+            Phone = rows['phoneIP']
+            polyPlaceCall(PhoneNumber)  # Send phone number to call
+            sleepTimer = random.randint(10,60)
+            time.sleep(sleepTimer)
+            # Get JSON response and place in CallStatus variable
+            CallStatus = polyCheckCallStatus()
+            # Get Call Handle from JSON response to Call Status
+            CallHandle = CallStatus["data"]["CallHandle"]
+            print(CallHandle)  # Just to display something to screen to troubleshoot when broken
+            sleepTimer2 = random.randint(5,30)
+            time.sleep(sleepTimer2)
+            polyEndCall(CallHandle)  # End call using Call Handle returned above
+        else:
+            print('Phone is not a Poly phone. ' + rows['phoneType'] + ' API is being researched for use.')
 
-# Get JSON response and place in CallStatus variable
-CallStatus = CheckCallStatus()
-
-# Get Call Handle from JSON response to Call Status
-CallHandle = CallStatus["data"]["CallHandle"]
-print(CallHandle)  # Just to display something to screen to troubleshoot when broken
-
-time.sleep(3)
-
-EndCall(CallHandle)  # End call using Call Handle returned above

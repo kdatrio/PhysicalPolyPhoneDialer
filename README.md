@@ -5,8 +5,14 @@
 Requirements (tested versions):
 
 - Python 3.9 (tested)
+- certifi==2022.12.7
+- numpy==1.24.1
+- pandas==1.5.3
+- python-dateutil==2.8.2
 - python-dotenv==0.21.1
+- pytz==2022.7.1
 - requests==2.28.2
+- six==1.16.0
 - urllib3==1.26.14
 
 Setup:
@@ -16,7 +22,9 @@ Setup:
   PHONEUSER=<Username Admin level>
   PASSWORD=<Phone Admin password>
   PHONE=<Phone IP Address>
-- Update phone number in line 58 string
+- Update CSV file with appropriate data for load generation
+  -- data/PhoneNumberList.csv is single column of phone numbers to randomly dial
+  -- data/PhoneList.csv is currently two columns (phoneIP, phoneType) with IP address of physical phone and Poly or Yealink as type
 
 Usage:
 
