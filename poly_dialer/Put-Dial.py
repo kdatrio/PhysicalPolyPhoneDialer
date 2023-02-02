@@ -56,17 +56,29 @@ load_dotenv()
 # Create and load variables from Environment settings
 PhoneUser = os.getenv("PHONEUSER")
 Password = os.getenv("PASSWORD")
-PhoneNumberList = pd.read_csv('data/PhoneNumberList.csv')
+PhoneNumberList = pd.read_csv('data/PhoneNumberList.csv', dtype= str)
+PhoneList = pd.read_csv('data/PhoneList.csv')
 
-# Returns random number from dataframe
-PhoneNumber = PhoneNumberList.sample()
-print('Calling: ' & PhoneNumber)
-polyPlaceCall(PhoneNumber)  # Send phone number to call
-time.sleep(random.randint(10,60))
-# Get JSON response and place in CallStatus variable
-CallStatus = polyCheckCallStatus()
-# Get Call Handle from JSON response to Call Status
-CallHandle = CallStatus["data"]["CallHandle"]
-print(CallHandle)  # Just to display something to screen to troubleshoot when broken
-time.sleep(random.randint(5,30))
-polyEndCall(CallHandle)  # End call using Call Handle returned above
+
+
+for DIDIndex, DIDrows in PhoneNumberList.iterrows():
+    PhoneNumber = DIDrows['phoneNumber']
+    print('Calling: ' + PhoneNumber)
+    for index, rows in PhoneList.iterrows():
+        # print('IP Address is ' + rows['phoneIP'] + ' the type of phone is ' + rows['phoneType'])
+        if rows['phoneType'] == 'Poly':
+            Phone = rows['phoneIP']
+            polyPlaceCall(PhoneNumber)  # Send phone number to call
+            sleepTimer = random.randint(10,60)
+            time.sleep(sleepTimer)
+            # Get JSON response and place in CallStatus variable
+            CallStatus = polyCheckCallStatus()
+            # Get Call Handle from JSON response to Call Status
+            CallHandle = CallStatus["data"]["CallHandle"]
+            print(CallHandle)  # Just to display something to screen to troubleshoot when broken
+            sleepTimer2 = random.randint(5,30)
+            time.sleep(sleepTimer2)
+            polyEndCall(CallHandle)  # End call using Call Handle returned above
+        else:
+            print('Phone is not a Poly phone. ' + rows['phoneType'] + ' API is being researched for use.')
+
