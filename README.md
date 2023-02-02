@@ -23,6 +23,8 @@ Setup:
   PASSWORD=<Phone Admin password>
   PHONE=<Phone IP Address>
 - Update CSV file with appropriate data for load generation
+  -- data/PhoneNumberList.csv is single column of phone numbers to randomly dial
+  -- data/PhoneList.csv is currently two columns (phoneIP, phoneType) with IP address of physical phone and Poly or Yealink as type
 
 Usage:
 
