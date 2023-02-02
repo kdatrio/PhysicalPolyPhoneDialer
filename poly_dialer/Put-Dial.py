@@ -1,13 +1,13 @@
 # Poly Physical Phone Dialer for Sandbox environments
 # Created by: Keith D'Atrio and Joe Smith
-# January 2023
+# January 2023 - Updated Feb 2023
 
 import os
 from dotenv import load_dotenv
-import requests, time
+import requests, time, random
+import pandas as pd
 
 # ********* Function Declarations **********
-
 
 def polyPlaceCall(CalledNumber):  # function to place Call with phone number given
     headers = {
@@ -22,7 +22,6 @@ def polyPlaceCall(CalledNumber):  # function to place Call with phone number giv
         auth=(PhoneUser, Password),
     )
 
-
 def polyCheckCallStatus():  # function to check status of the call and get the responsse into JSON format
     headers = {
         "Content-Type": "application/json",
@@ -34,7 +33,6 @@ def polyCheckCallStatus():  # function to check status of the call and get the r
         auth=(PhoneUser, Password),
     )
     return response.json()
-
 
 def polyEndCall(
     Handle,
@@ -52,30 +50,23 @@ def polyEndCall(
     )
     print(response)
 
-
 # ********** Main Code ***********
-
 # Load Environmental Settings from .env file
 load_dotenv()
-
 # Create and load variables from Environment settings
 PhoneUser = os.getenv("PHONEUSER")
 Password = os.getenv("PASSWORD")
-Phone = os.getenv("PHONE")
+PhoneNumberList = pd.read_csv('data/PhoneNumberList.csv')
 
-PhoneNumber = input("What phone number would you like to call? ")
-
+# Returns random number from dataframe
+PhoneNumber = PhoneNumberList.sample()
+print('Calling: ' & PhoneNumber)
 polyPlaceCall(PhoneNumber)  # Send phone number to call
-
-time.sleep(10)
-
+time.sleep(random.randint(10,60))
 # Get JSON response and place in CallStatus variable
 CallStatus = polyCheckCallStatus()
-
 # Get Call Handle from JSON response to Call Status
 CallHandle = CallStatus["data"]["CallHandle"]
 print(CallHandle)  # Just to display something to screen to troubleshoot when broken
-
-time.sleep(3)
-
+time.sleep(random.randint(5,30))
 polyEndCall(CallHandle)  # End call using Call Handle returned above
